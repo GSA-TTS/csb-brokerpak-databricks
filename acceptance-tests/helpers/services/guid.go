@@ -1,7 +1,7 @@
 package services
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
 	"strings"
 )
 

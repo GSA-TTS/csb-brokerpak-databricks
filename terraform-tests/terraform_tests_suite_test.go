@@ -18,8 +18,8 @@ func TestTerraformTests(t *testing.T) {
 var (
 	workingDir string
 
-	googleCredentials = os.Getenv("GOOGLE_CREDENTIALS")
-	googleProject     = os.Getenv("GOOGLE_PROJECT")
+	databricksHost  = os.Getenv("DATABRICKS_HOST")
+	databricksToken = os.Getenv("DATABRICKS_TOKEN")
 )
 
 var _ = BeforeSuite(func() {

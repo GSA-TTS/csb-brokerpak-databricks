@@ -1,17 +1,13 @@
 package apps
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/testpath"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/testpath"
 )
 
 type AppCode string
 
 const (
-	Storage          AppCode = "storageapp"
-	MySQL            AppCode = "mysqlapp"
-	PostgreSQL       AppCode = "postgresqlapp"
-	JDBCTestApp      AppCode = "jdbctestapp"
-	SpringStorageApp AppCode = "springstorageapp"
+	Databricks AppCode = "databricksapp"
 )
 
 func (a AppCode) Dir() string {
@@ -19,12 +15,5 @@ func (a AppCode) Dir() string {
 }
 
 func WithApp(app AppCode) Option {
-	switch app {
-	case JDBCTestApp:
-		return WithDir(app.Dir())
-	case SpringStorageApp:
-		return WithMavenPreBuild(app.Dir())
-	default:
-		return WithGoPreBuild(app.Dir())
-	}
+	return WithGoPreBuild(app.Dir())
 }

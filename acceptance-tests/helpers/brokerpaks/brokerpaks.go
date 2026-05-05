@@ -9,7 +9,7 @@ import (
 	"regexp"
 )
 
-const brokerpak = "cloudfoundry/csb-brokerpak-gcp"
+const brokerpak = "GSA-TTS/csb-brokerpak-databricks"
 
 // DownloadBrokerpak will download the brokerpak of the specified
 // version and return the directory where it has been placed.
@@ -17,7 +17,7 @@ const brokerpak = "cloudfoundry/csb-brokerpak-gcp"
 // Includes downloading the corresponding broker and ".envrc" file
 func DownloadBrokerpak(version, dir string) string {
 	// Brokerpak
-	basename := fmt.Sprintf("gcp-services-%s.brokerpak", version)
+	basename := fmt.Sprintf("databricks-services-%s.brokerpak", version)
 	uri := fmt.Sprintf("https://github.com/%s/releases/download/%s/%s", brokerpak, version, basename)
 	downloadUnlessCached(dir, basename, uri)
 

@@ -6,27 +6,23 @@ help: ## list Makefile targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 ###### Setup ##################################################################
-IAAS=gcp
+IAAS=databricks
 CSB_VERSION := $(or $(CSB_VERSION), $(shell grep 'github.com/cloudfoundry/cloud-service-broker' go.mod | grep -v replace | awk '{print $$NF}' | sed -e 's/v//'))
 CSB_RELEASE_VERSION := $(CSB_VERSION)
 
 ####### broker environment variables
-SECURITY_USER_NAME := $(or $(SECURITY_USER_NAME), gcp-broker)
-SECURITY_USER_PASSWORD := $(or $(SECURITY_USER_PASSWORD), gcp-broker-pw)
-GSB_PROVISION_DEFAULTS := $(or $(GSB_PROVISION_DEFAULTS), {"authorized_network_id": "https://www.googleapis.com/compute/v1/projects/$GOOGLE_PROJECT/global/networks/$GCP_PAS_NETWORK"})
+SECURITY_USER_NAME := $(or $(SECURITY_USER_NAME), databricks-broker)
+SECURITY_USER_PASSWORD := $(or $(SECURITY_USER_PASSWORD), databricks-broker-pw)
 
 BROKER_GO_OPTS=PORT=8080 \
 				DB_TYPE=sqlite3 \
 				DB_PATH=/tmp/csb-db \
 				SECURITY_USER_NAME=$(SECURITY_USER_NAME) \
 				SECURITY_USER_PASSWORD=$(SECURITY_USER_PASSWORD) \
-				GOOGLE_CREDENTIALS='$(GOOGLE_CREDENTIALS)' \
-				GOOGLE_PROJECT=$(GOOGLE_PROJECT) \
+				DATABRICKS_HOST='$(DATABRICKS_HOST)' \
+				DATABRICKS_TOKEN=$(DATABRICKS_TOKEN) \
 				PAK_BUILD_CACHE_PATH=$(PAK_BUILD_CACHE_PATH) \
- 				GSB_PROVISION_DEFAULTS='$(GSB_PROVISION_DEFAULTS)' \
- 				GSB_SERVICE_CSB_GOOGLE_POSTGRES_PLANS='$(GSB_SERVICE_CSB_GOOGLE_POSTGRES_PLANS)' \
- 				GSB_SERVICE_CSB_GOOGLE_MYSQL_PLANS='$(GSB_SERVICE_CSB_GOOGLE_MYSQL_PLANS)' \
- 				GSB_SERVICE_CSB_GOOGLE_STORAGE_BUCKET_PLANS='$(GSB_SERVICE_CSB_GOOGLE_STORAGE_BUCKET_PLANS)' \
+ 				GSB_SERVICE_CSB_DATABRICKS_WORKSPACE_PLANS='$(GSB_SERVICE_CSB_DATABRICKS_WORKSPACE_PLANS)' \
  				GSB_COMPATIBILITY_ENABLE_BETA_SERVICES=$(GSB_COMPATIBILITY_ENABLE_BETA_SERVICES)
 
 PAK_PATH=$(PWD) #where the brokerpak zip resides
@@ -43,7 +39,7 @@ $(IAAS)-services-*.brokerpak: *.yml terraform/*/*/*.tf | $(PAK_BUILD_CACHE_PATH)
 	$(RUN_CSB) pak build
 
 .PHONY: run
-run: google_credentials google_project ## start CSB
+run: databricks_host databricks_token ## start CSB
 	$(RUN_CSB) pak build --target current
 	$(RUN_CSB) serve
 
@@ -85,30 +81,24 @@ validate: build ## use the CSB to validate the buildpak
 cloud-service-broker: go.mod ## build or fetch CSB binary
 	"$(GET_CSB)"
 
-APP_NAME := $(or $(APP_NAME), cloud-service-broker-gcp)
+APP_NAME := $(or $(APP_NAME), cloud-service-broker-databricks)
 DB_TLS := $(or $(DB_TLS), skip-verify)
 
 
 .PHONY: push-broker
-push-broker: cloud-service-broker build google_credentials google_project gcp_pas_network ## push the broker to targeted Cloud Foundry
-	MANIFEST=cf-manifest.yml APP_NAME=$(APP_NAME) DB_TLS=$(DB_TLS) GSB_PROVISION_DEFAULTS='$(GSB_PROVISION_DEFAULTS)' ./scripts/push-broker.sh
+push-broker: cloud-service-broker build databricks_host databricks_token ## push the broker to targeted Cloud Foundry
+	MANIFEST=cf-manifest.yml APP_NAME=$(APP_NAME) DB_TLS=$(DB_TLS) ./scripts/push-broker.sh
 
-.PHONY: google_credentials
-google_credentials:
-ifndef GOOGLE_CREDENTIALS
-	$(error variable GOOGLE_CREDENTIALS not defined)
+.PHONY: databricks_host
+databricks_host:
+ifndef DATABRICKS_HOST
+	$(error variable DATABRICKS_HOST not defined)
 endif
 
-.PHONY: google_project
-google_project:
-ifndef GOOGLE_PROJECT
-	$(error variable GOOGLE_PROJECT not defined)
-endif
-
-.PHONY: gcp_pas_network
-gcp_pas_network:
-ifndef GCP_PAS_NETWORK
-	$(error variable GCP_PAS_NETWORK not defined - must be GCP network for PAS foundation)
+.PHONY: databricks_token
+databricks_token:
+ifndef DATABRICKS_TOKEN
+	$(error variable DATABRICKS_TOKEN not defined)
 endif
 
 .PHONY: clean

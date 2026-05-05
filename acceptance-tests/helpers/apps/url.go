@@ -7,7 +7,7 @@ import (
 	"code.cloudfoundry.org/jsonry"
 	. "github.com/onsi/gomega"
 
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
 )
 
 func url(name string) string {

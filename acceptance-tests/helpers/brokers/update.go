@@ -1,8 +1,8 @@
 package brokers
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/apps"
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/apps"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
 )
 
 func (b *Broker) UpdateBroker(dir string) {

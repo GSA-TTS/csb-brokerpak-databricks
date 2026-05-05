@@ -1,4 +1,4 @@
-module csbbrokerpakgcp
+module csbbrokerpakdatabricks
 
 go 1.26.2
 

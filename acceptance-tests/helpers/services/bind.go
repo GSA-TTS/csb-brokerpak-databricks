@@ -1,8 +1,8 @@
 package services
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/apps"
-	"csbbrokerpakgcp/acceptance-tests/helpers/bindings"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/apps"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/bindings"
 )
 
 func (s *ServiceInstance) BindWithParams(app *apps.App, params string) *bindings.Binding {

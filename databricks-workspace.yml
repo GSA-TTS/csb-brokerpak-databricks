@@ -1,0 +1,134 @@
+# Copyright 2024 GSA-TTS
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http:#www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+version: 1
+name: csb-databricks-workspace
+id: 8a8da4d7-1f3e-4d3e-9c1a-2b4f8c3e1d5a
+description: Databricks workspace cluster provisioned via OpenTofu.
+display_name: Databricks Workspace
+image_url: file://service-images/csb.png
+documentation_url: https://docs.databricks.com
+provider_display_name: Databricks
+support_url: https://databricks.com/support
+tags: [databricks]
+plan_updateable: true
+plans: []
+provision:
+  plan_inputs: []
+  user_inputs:
+  - field_name: cluster_name
+    type: string
+    details: Name for the Databricks cluster.
+    default: csb-${request.instance_id}
+    prohibit_update: true
+    constraints:
+      maxLength: 100
+      minLength: 3
+      pattern: ^[a-zA-Z0-9_-]+$
+  - field_name: spark_version
+    type: string
+    details: |
+      The Spark version for the cluster.
+      See https://docs.databricks.com/en/release-notes/runtime/index.html for available versions.
+    default: "13.3.x-scala2.12"
+  - field_name: node_type_id
+    type: string
+    details: The node type for the cluster workers.
+    default: "i3.xlarge"
+  - field_name: num_workers
+    type: number
+    details: Number of worker nodes in the cluster.
+    default: 1
+    constraints:
+      minimum: 0
+  - field_name: autotermination_minutes
+    type: number
+    details: |
+      Automatically terminate the cluster after this many minutes of inactivity.
+      Set to 0 to disable auto-termination.
+    default: 30
+    constraints:
+      minimum: 0
+  - field_name: databricks_host
+    type: string
+    details: The Databricks workspace URL.
+    default: ${config("databricks.host")}
+  - field_name: databricks_token
+    type: string
+    details: The Databricks personal access token.
+    default: ${config("databricks.token")}
+  computed_inputs:
+  - name: labels
+    default: ${json.marshal(request.default_labels)}
+    overwrite: true
+    type: object
+  template_refs:
+    provider: terraform/databricks/provision/provider.tf
+    versions: terraform/databricks/provision/versions.tf
+    main: terraform/databricks/provision/main.tf
+    variables: terraform/databricks/provision/variables.tf
+    outputs: terraform/databricks/provision/outputs.tf
+  outputs:
+  - required: true
+    field_name: cluster_id
+    type: string
+    details: The unique identifier of the Databricks cluster.
+  - required: true
+    field_name: databricks_host
+    type: string
+    details: The Databricks workspace URL.
+
+bind:
+  plan_inputs: []
+  user_inputs:
+  - field_name: token_lifetime_seconds
+    type: number
+    details: |
+      The lifetime of the generated personal access token in seconds.
+      Set to 0 for no expiry.
+    default: 0
+    constraints:
+      minimum: 0
+  computed_inputs:
+  - name: databricks_host
+    default: ${instance.details["databricks_host"]}
+    overwrite: true
+    type: string
+  - name: databricks_token
+    default: ${config("databricks.token")}
+    overwrite: true
+    type: string
+  - name: cluster_id
+    default: ${instance.details["cluster_id"]}
+    overwrite: true
+    type: string
+  template_refs:
+    provider: terraform/databricks/bind/provider.tf
+    versions: terraform/databricks/bind/versions.tf
+    main: terraform/databricks/bind/main.tf
+    variables: terraform/databricks/bind/variables.tf
+    outputs: terraform/databricks/bind/outputs.tf
+  outputs:
+  - required: true
+    field_name: databricks_host
+    type: string
+    details: The Databricks workspace URL.
+  - required: true
+    field_name: databricks_token
+    type: string
+    details: The personal access token for accessing the Databricks workspace.
+  - required: true
+    field_name: cluster_id
+    type: string
+    details: The unique identifier of the Databricks cluster.

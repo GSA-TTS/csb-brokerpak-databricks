@@ -18,8 +18,8 @@ The main pattern is:
 - The [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 
 ### Environment variables
-- GOOGLE_CREDENTIALS
-- GOOGLE_PROJECT
+- DATABRICKS_HOST
+- DATABRICKS_TOKEN
 
 ### Environment
 - A Cloud Foundry instance logged in and targeted

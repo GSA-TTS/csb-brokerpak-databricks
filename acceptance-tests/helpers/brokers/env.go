@@ -1,8 +1,8 @@
 package brokers
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/apps"
-	"csbbrokerpakgcp/acceptance-tests/helpers/testpath"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/apps"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/testpath"
 	"fmt"
 	"os"
 
@@ -13,11 +13,9 @@ func (b *Broker) env() []apps.EnvVar {
 	var result []apps.EnvVar
 
 	for name, required := range map[string]bool{
-		"GOOGLE_CREDENTIALS":                     true,
-		"GOOGLE_PROJECT":                         true,
-		"GCP_PAS_NETWORK":                        false,
+		"DATABRICKS_HOST":                        true,
+		"DATABRICKS_TOKEN":                       true,
 		"GSB_BROKERPAK_BUILTIN_PATH":             false,
-		"GSB_PROVISION_DEFAULTS":                 false,
 		"CH_CRED_HUB_URL":                        false,
 		"CH_UAA_URL":                             false,
 		"CH_UAA_CLIENT_NAME":                     false,

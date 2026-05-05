@@ -1,7 +1,7 @@
 // Package brokers manages service brokers
 package brokers
 
-import "csbbrokerpakgcp/acceptance-tests/helpers/apps"
+import "csbbrokerpakdatabricks/acceptance-tests/helpers/apps"
 
 type Broker struct {
 	Name      string

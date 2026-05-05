@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
 )
 
 func (s *ServiceInstance) Update(opts ...Option) {

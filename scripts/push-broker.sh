@@ -36,16 +36,12 @@ echo "    TERRAFORM_UPGRADES_ENABLED: ${TERRAFORM_UPGRADES_ENABLED:-true}" >>$cf
 echo "    BROKERPAK_UPDATES_ENABLED: ${BROKERPAK_UPDATES_ENABLED:-true}" >>$cfmf
 echo "    GSB_COMPATIBILITY_ENABLE_BETA_SERVICES: ${GSB_COMPATIBILITY_ENABLE_BETA_SERVICES:-true}" >>$cfmf
 
-if [[ ${GSB_PROVISION_DEFAULTS} ]]; then
-  echo "    GSB_PROVISION_DEFAULTS: $(echo "$GSB_PROVISION_DEFAULTS" | jq @json)" >>$cfmf
+if [[ ${DATABRICKS_HOST} ]]; then
+  echo "    DATABRICKS_HOST: $(echo "$DATABRICKS_HOST" | jq @json)" >>$cfmf
 fi
 
-if [[ ${GOOGLE_CREDENTIALS} ]]; then
-  echo "    GOOGLE_CREDENTIALS: $(echo "$GOOGLE_CREDENTIALS" | jq @json)" >>$cfmf
-fi
-
-if [[ ${GOOGLE_PROJECT} ]]; then
-  echo "    GOOGLE_PROJECT: ${GOOGLE_PROJECT}" >>$cfmf
+if [[ ${DATABRICKS_TOKEN} ]]; then
+  echo "    DATABRICKS_TOKEN: $(echo "$DATABRICKS_TOKEN" | jq @json)" >>$cfmf
 fi
 
 if [[ ${GSB_BROKERPAK_BUILTIN_PATH} ]]; then
@@ -80,23 +76,11 @@ if [[ ${GSB_DEBUG} ]]; then
   echo "    GSB_DEBUG: ${GSB_DEBUG}" >>$cfmf
 fi
 
-if [[ -z "$GSB_SERVICE_CSB_GOOGLE_POSTGRES_PLANS" ]]; then
-  echo "Missing GSB_SERVICE_CSB_GOOGLE_POSTGRES_PLANS varaible"
+if [[ -z "$GSB_SERVICE_CSB_DATABRICKS_WORKSPACE_PLANS" ]]; then
+  echo "Missing GSB_SERVICE_CSB_DATABRICKS_WORKSPACE_PLANS variable"
   exit 1
 fi
-echo "    GSB_SERVICE_CSB_GOOGLE_POSTGRES_PLANS: $(echo "$GSB_SERVICE_CSB_GOOGLE_POSTGRES_PLANS" | jq @json)" >>$cfmf
-
-if [[ -z "$GSB_SERVICE_CSB_GOOGLE_MYSQL_PLANS" ]]; then
-  echo "Missing GSB_SERVICE_CSB_GOOGLE_MYSQL_PLANS variable"
-  exit 1
-fi
-echo "    GSB_SERVICE_CSB_GOOGLE_MYSQL_PLANS: $(echo "$GSB_SERVICE_CSB_GOOGLE_MYSQL_PLANS" | jq @json)" >>$cfmf
-
-if [[ -z "$GSB_SERVICE_CSB_GOOGLE_STORAGE_BUCKET_PLANS" ]]; then
-  echo "Missing GSB_SERVICE_CSB_GOOGLE_STORAGE_BUCKET_PLANS variable"
-  exit 1
-fi
-echo "    GSB_SERVICE_CSB_GOOGLE_STORAGE_BUCKET_PLANS: $(echo "$GSB_SERVICE_CSB_GOOGLE_STORAGE_BUCKET_PLANS" | jq @json)" >>$cfmf
+echo "    GSB_SERVICE_CSB_DATABRICKS_WORKSPACE_PLANS: $(echo "$GSB_SERVICE_CSB_DATABRICKS_WORKSPACE_PLANS" | jq @json)" >>$cfmf
 
 cf push --no-start -f "${cfmf}" --var app=${APP_NAME}
 

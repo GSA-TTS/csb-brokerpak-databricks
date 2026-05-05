@@ -1,7 +1,7 @@
 package acceptance_test
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/environment"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/environment"
 	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -13,8 +13,8 @@ func TestAcceptanceTests(t *testing.T) {
 	RunSpecs(t, "Acceptance Tests Suite")
 }
 
-var GCPMetadata environment.GCPMetadata
+var DatabricksMetadata environment.DatabricksMetadata
 
 var _ = BeforeSuite(func() {
-	GCPMetadata = environment.ReadGCPMetadata()
+	DatabricksMetadata = environment.ReadDatabricksMetadata()
 })

@@ -1,7 +1,7 @@
 package brokers
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/apps"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/apps"
 	"os"
 	"path/filepath"
 

@@ -1,18 +1,18 @@
-# csb-brokerpak-gcp
+# csb-brokerpak-databricks
 
-A brokerpak for the [Cloud Service Broker](https://github.com/pivotal/cloud-service-broker) that provides support for GCP services.
+A brokerpak for the [Cloud Service Broker](https://github.com/pivotal/cloud-service-broker) that provides support for Databricks services.
 
 ## Development Requirements
 
 * Either an up-to-date version of Go or [Docker](https://docs.docker.com/get-docker/)
 * make - covers development lifecycle steps
 
-## GCP account information
+## Databricks account information
 
-To provision services, the brokerpak currently requires GCP credentials. The brokerpak expects them in environment variables:
+To provision services, the brokerpak requires Databricks credentials. The brokerpak expects them in environment variables:
 
-* GOOGLE_CREDENTIALS
-* GOOGLE_PROJECT
+* DATABRICKS_HOST - the Databricks workspace URL (e.g. `https://adb-123456789.azuredatabricks.net`)
+* DATABRICKS_TOKEN - a Databricks personal access token
 
 ## Development Tools
 
@@ -44,8 +44,6 @@ There is a make target to push the broker and brokerpak into a CloudFoundry foun
 
 - `make push-broker` will `cf push` the broker into CloudFoundry. Requires the `cf` cli to be installed.
 - `make run-integration-tests` will test the brokerpak with the latest version of CSB
-
-The broker gets pushed into CloudFoundry as *cloud-service-broker-gcp*  It will be necessary to bind a MySQL database to the broker to provide broker state storage. See [GCP Installation](./docs/installation.md) docs for more info.
 
 ## Broker
 The version of Cloud Service Broker to use with this brokerpak is encoded in the `go.mod` file.

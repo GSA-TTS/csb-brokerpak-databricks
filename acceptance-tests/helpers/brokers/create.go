@@ -1,10 +1,10 @@
 package brokers
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/apps"
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
-	"csbbrokerpakgcp/acceptance-tests/helpers/random"
-	"csbbrokerpakgcp/acceptance-tests/helpers/testpath"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/apps"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/random"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/testpath"
 	"fmt"
 	"path/filepath"
 	"strings"
