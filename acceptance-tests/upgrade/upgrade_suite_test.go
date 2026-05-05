@@ -1,8 +1,8 @@
 package upgrade_test
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/brokerpaks"
-	"csbbrokerpakgcp/acceptance-tests/helpers/environment"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/brokerpaks"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/environment"
 	"flag"
 	"os"
 	"testing"
@@ -15,7 +15,7 @@ var (
 	fromVersion         string
 	developmentBuildDir string
 	releasedBuildDir    string
-	metadata            environment.GCPMetadata
+	metadata            environment.DatabricksMetadata
 )
 
 func init() {
@@ -30,7 +30,7 @@ func TestUpgrade(t *testing.T) {
 }
 
 var _ = BeforeSuite(func() {
-	metadata = environment.ReadGCPMetadata()
+	metadata = environment.ReadDatabricksMetadata()
 
 	if releasedBuildDir == "" { // Released dir not specified, so we should download a brokerpak
 		if fromVersion == "" { // Version not specified, so use latest
@@ -58,6 +58,6 @@ func preflight(dir string) {
 	Expect(names).To(ContainElements(
 		Equal("cloud-service-broker"),
 		Equal(".envrc"),
-		MatchRegexp(`gcp-services-\S+\.brokerpak`),
+		MatchRegexp(`databricks-services-\S+\.brokerpak`),
 	))
 }

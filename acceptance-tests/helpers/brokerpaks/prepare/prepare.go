@@ -1,7 +1,7 @@
 package main
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/brokerpaks"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/brokerpaks"
 	"flag"
 )
 

@@ -20,7 +20,7 @@ func LatestVersion() string {
 
 // Versions will get all the released Versions
 func Versions() []semver.Version {
-	body := newClient().get(fmt.Sprintf("https://api.github.com/repos/%s/releases?per_page=100", brokerpak), "application/json") // max per page
+	body := newClient().get(fmt.Sprintf("https://api.github.com/repos/%s/releases?per_page=100", brokerpakRepo), "application/json") // max per page
 	defer body.Close()
 	data := must(io.ReadAll(body))
 

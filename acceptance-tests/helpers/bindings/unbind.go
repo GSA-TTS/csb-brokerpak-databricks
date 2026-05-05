@@ -1,7 +1,7 @@
 package bindings
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
 )
 
 func (b *Binding) Unbind() {

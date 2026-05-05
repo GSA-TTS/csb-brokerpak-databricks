@@ -1,7 +1,7 @@
 package apps
 
 import (
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
 	"encoding/json"
 
 	. "github.com/onsi/gomega"

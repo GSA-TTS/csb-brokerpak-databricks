@@ -24,7 +24,7 @@ might have defaults or embedded logic that could alter the final state.
 
 ### Environment
 
-- `GOOGLE_CREDENTIALS` and `GOOGLE_PROJECT` must be set as environment variables as OpenTofu will attempt to connect to
+- `DATABRICKS_HOST` and `DATABRICKS_TOKEN` must be set as environment variables as OpenTofu will attempt to connect to
   the IaaS.
 
 

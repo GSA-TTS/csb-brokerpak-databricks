@@ -1,6 +1,6 @@
 package brokers
 
-import "csbbrokerpakgcp/acceptance-tests/helpers/cf"
+import "csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
 
 func (b *Broker) Delete() {
 	// This is implicit when deleting the app, but sometimes that fails, so this ensures the resource is freed

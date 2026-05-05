@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"csbbrokerpakgcp/acceptance-tests/helpers/brokers"
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
-	"csbbrokerpakgcp/acceptance-tests/helpers/random"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/brokers"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/random"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"

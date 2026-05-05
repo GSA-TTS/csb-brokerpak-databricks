@@ -9,8 +9,8 @@ import (
 	"github.com/onsi/gomega/gexec"
 	"gopkg.in/yaml.v3"
 
-	"csbbrokerpakgcp/acceptance-tests/helpers/cf"
-	"csbbrokerpakgcp/acceptance-tests/helpers/random"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/cf"
+	"csbbrokerpakdatabricks/acceptance-tests/helpers/random"
 )
 
 const pushWaitTime = 20 * time.Minute
