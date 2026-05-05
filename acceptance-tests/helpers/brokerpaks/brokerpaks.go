@@ -9,7 +9,7 @@ import (
 	"regexp"
 )
 
-const brokerpak = "GSA-TTS/csb-brokerpak-databricks"
+const brokerpakRepo = "GSA-TTS/csb-brokerpak-databricks"
 
 // DownloadBrokerpak will download the brokerpak of the specified
 // version and return the directory where it has been placed.
@@ -18,11 +18,11 @@ const brokerpak = "GSA-TTS/csb-brokerpak-databricks"
 func DownloadBrokerpak(version, dir string) string {
 	// Brokerpak
 	basename := fmt.Sprintf("databricks-services-%s.brokerpak", version)
-	uri := fmt.Sprintf("https://github.com/%s/releases/download/%s/%s", brokerpak, version, basename)
+	uri := fmt.Sprintf("https://github.com/%s/releases/download/%s/%s", brokerpakRepo, version, basename)
 	downloadUnlessCached(dir, basename, uri)
 
 	// ".envrc" file
-	envrcURI := fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/.envrc", brokerpak, version)
+	envrcURI := fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/.envrc", brokerpakRepo, version)
 	downloadUnlessCached(dir, ".envrc", envrcURI)
 
 	// broker
@@ -38,7 +38,7 @@ func DownloadBrokerpak(version, dir string) string {
 
 // readBrokerVersion will use the specified brokerpak version to determine the corresponding broker version
 func readBrokerVersion(version string) string {
-	body := newClient().get(fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/go.mod", brokerpak, version), "text/plain")
+	body := newClient().get(fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/go.mod", brokerpakRepo, version), "text/plain")
 	defer body.Close()
 	data := must(io.ReadAll(body))
 

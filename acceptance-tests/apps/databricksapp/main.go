@@ -19,13 +19,22 @@ type vcapServices struct {
 }
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		_, err := getCredentials()
+		if err != nil {
+			http.Error(w, "credentials unavailable", http.StatusInternalServerError)
+			return
+		}
+		fmt.Fprintf(w, "OK")
+	})
+
+	http.HandleFunc("/cluster-id", func(w http.ResponseWriter, r *http.Request) {
 		creds, err := getCredentials()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		fmt.Fprintf(w, "Databricks Host: %s, Cluster ID: %s", creds.Host, creds.ClusterID)
+		fmt.Fprintf(w, "%s", creds.ClusterID)
 	})
 
 	port := os.Getenv("PORT")

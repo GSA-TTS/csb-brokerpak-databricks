@@ -38,7 +38,9 @@ var _ = Describe("UpgradeDatabricksWorkspaceTest", Label("workspace"), func() {
 			By("triggering a no-op update to reapply the terraform for service instance")
 			serviceInstance.Update(services.WithParameters(`{}`))
 
-			Expect(metadata.Host).NotTo(BeEmpty())
+			By("verifying the service instance is still accessible after upgrade")
+			Expect(metadata.Host).NotTo(BeEmpty(), "Databricks host should be configured")
+			Expect(serviceInstance).NotTo(BeNil(), "Service instance should exist after upgrade")
 		})
 	})
 })
