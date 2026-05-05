@@ -1,0 +1,14 @@
+name: Focused Test
+
+on: [pull_request]
+
+jobs:
+  focused-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+      - run: go tool ginkgo unfocus && test -z "$(git status -s)"
+
