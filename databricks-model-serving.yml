@@ -1,0 +1,279 @@
+---
+version: 1
+name: csb-databricks-model-serving
+id: 53f94f6a-7c52-4d42-8509-2ae7f20f21a1
+description: |
+  CSB Databricks Model Serving — current access family:
+  databricks_model_serving_token. Provisions a Databricks model serving endpoint
+  in the configured workspace and returns a binding-scoped Databricks PAT,
+  the serving invocation URL, and an OpenAI-compatible base URL of the form
+  /serving-endpoints/<endpoint>/v1 for clients such as Codex.
+display_name: CSB Databricks Model Serving
+image_url: file://service-images/csb.png
+documentation_url: https://docs.databricks.com/machine-learning/model-serving/index.html
+provider_display_name: GSA TTS
+support_url: https://docs.databricks.com/machine-learning/model-serving/index.html
+tags: [databricks, ai, llm, model-serving, token]
+plan_updateable: true
+plans:
+- name: sandbox-8h
+  id: 6c31b84b-05ec-4b5b-82a6-c6c93dc2b541
+  description: |
+    Sandbox plan — 8-hour TTL metadata with a single Databricks served entity.
+    Returns a binding-scoped Databricks PAT plus serving URLs. Access family:
+    databricks_model_serving_token.
+  display_name: Sandbox 8-hour
+  properties:
+    ttl_hours: 8
+    workload_size: Small
+    workload_type: CPU
+    scale_to_zero_enabled: true
+    budget_amount: 100
+- name: standard
+  id: 8f7a94cf-38fd-4cb0-8f65-675e2a5267e1
+  description: |
+    Standard plan — configurable Databricks model serving endpoint with the
+    same bind-time token behavior as sandbox-8h.
+  display_name: Standard
+  properties:
+    workload_size: Small
+    workload_type: CPU
+    scale_to_zero_enabled: true
+    budget_amount: 100
+provision:
+  plan_inputs:
+  - field_name: ttl_hours
+    type: number
+    details: Hours until this instance is treated as expired for sandbox lifecycle handling.
+    default: 8
+  - field_name: workload_size
+    type: string
+    details: Databricks serving workload size.
+    default: Small
+    enum:
+      Small: Small
+      Medium: Medium
+      Large: Large
+  - field_name: workload_type
+    type: string
+    details: Databricks serving workload type.
+    default: CPU
+    enum:
+      CPU: CPU
+      GPU_SMALL: GPU_SMALL
+      GPU_MEDIUM: GPU_MEDIUM
+      GPU_LARGE: GPU_LARGE
+  - field_name: scale_to_zero_enabled
+    type: boolean
+    details: Whether the serving endpoint may scale to zero.
+    default: true
+  - field_name: budget_amount
+    type: number
+    details: Budget metadata for this instance.
+    default: 100
+  user_inputs:
+  - field_name: endpoint_name
+    type: string
+    details: Databricks serving endpoint name.
+    default: csb-${request.instance_id}
+    prohibit_update: true
+  - field_name: served_entity_name
+    type: string
+    details: Name of the served entity within the serving endpoint.
+    default: primary
+  - field_name: entity_name
+    type: string
+    details: Databricks model or foundation model identifier to serve.
+    default: system.ai.llama_v3_2_3b_instruct
+  - field_name: entity_version
+    type: string
+    details: Entity version to serve.
+    default: "2"
+  - field_name: description
+    type: string
+    details: Optional serving endpoint description.
+    default: Brokered Databricks model serving endpoint
+  - field_name: databricks_host
+    type: string
+    details: Databricks workspace URL.
+    default: ${config("databricks.host")}
+  - field_name: databricks_token
+    type: string
+    details: Databricks personal access token used by the broker.
+    default: ${config("databricks.token")}
+  computed_inputs:
+  - name: labels
+    default: ${json.marshal(request.default_labels)}
+    overwrite: true
+    type: object
+  - name: cf_context_json
+    default: ${json.marshal(request.context)}
+    overwrite: true
+    type: string
+  template_refs:
+    provider: terraform/model-serving/provision/provider.tf
+    versions: terraform/model-serving/provision/versions.tf
+    variables: terraform/model-serving/provision/variables.tf
+    main: terraform/model-serving/provision/main.tf
+    outputs: terraform/model-serving/provision/outputs.tf
+  outputs:
+  - field_name: endpoint_name
+    type: string
+    details: Databricks serving endpoint name.
+  - field_name: serving_endpoint_id
+    type: string
+    details: Databricks serving endpoint ID.
+  - field_name: invocation_url
+    type: string
+    details: Databricks serving endpoint invocation URL.
+  - field_name: openai_base_url
+    type: string
+    details: OpenAI-compatible Databricks base URL for clients such as Codex.
+  - field_name: databricks_host
+    type: string
+    details: Databricks workspace URL.
+  - field_name: served_entity_name
+    type: string
+    details: Name of the served entity exposed through the endpoint.
+  - field_name: entity_name
+    type: string
+    details: Databricks model or foundation model identifier configured for the endpoint.
+  - field_name: entity_version
+    type: string
+    details: Model version configured for the endpoint.
+  - field_name: workload_size
+    type: string
+    details: Serving workload size.
+  - field_name: workload_type
+    type: string
+    details: Serving workload type.
+  - field_name: scale_to_zero_enabled
+    type: boolean
+    details: Whether the endpoint may scale to zero.
+  - field_name: budget_amount
+    type: number
+    details: Budget metadata for this instance.
+  - field_name: ttl_expires_at
+    type: string
+    details: RFC3339 timestamp when this instance expires.
+  - field_name: resource_tags_json
+    type: string
+    details: JSON object of effective Databricks tags derived from CF labels.
+  - field_name: cf_provenance_json
+    type: string
+    details: JSON object of CF org and space provenance metadata.
+bind:
+  plan_inputs: []
+  user_inputs:
+  - field_name: token_lifetime_seconds
+    type: number
+    details: Lifetime of the generated Databricks PAT for this binding. Set to 0 for provider default behavior.
+    default: 0
+    constraints:
+      minimum: 0
+  computed_inputs:
+  - name: databricks_host
+    default: ${instance.details["databricks_host"]}
+    overwrite: true
+    type: string
+  - name: databricks_token
+    default: ${config("databricks.token")}
+    overwrite: true
+    type: string
+  - name: endpoint_name
+    default: ${instance.details["endpoint_name"]}
+    overwrite: true
+    type: string
+  - name: invocation_url
+    default: ${instance.details["invocation_url"]}
+    overwrite: true
+    type: string
+  - name: openai_base_url
+    default: ${instance.details["openai_base_url"]}
+    overwrite: true
+    type: string
+  - name: served_entity_name
+    default: ${instance.details["served_entity_name"]}
+    overwrite: true
+    type: string
+  - name: entity_name
+    default: ${instance.details["entity_name"]}
+    overwrite: true
+    type: string
+  - name: entity_version
+    default: ${instance.details["entity_version"]}
+    overwrite: true
+    type: string
+  - name: workload_size
+    default: ${instance.details["workload_size"]}
+    overwrite: true
+    type: string
+  - name: workload_type
+    default: ${instance.details["workload_type"]}
+    overwrite: true
+    type: string
+  - name: ttl_expires_at
+    default: ${instance.details["ttl_expires_at"]}
+    overwrite: true
+    type: string
+  - name: resource_tags_json
+    default: ${instance.details["resource_tags_json"]}
+    overwrite: true
+    type: string
+  - name: cf_context_json
+    default: ${json.marshal(request.context)}
+    overwrite: true
+    type: string
+  - name: cf_app_guid
+    default: ${request.app_guid}
+    overwrite: true
+    type: string
+  template_refs:
+    provider: terraform/model-serving/bind/provider.tf
+    versions: terraform/model-serving/bind/versions.tf
+    variables: terraform/model-serving/bind/variables.tf
+    main: terraform/model-serving/bind/main.tf
+    outputs: terraform/model-serving/bind/outputs.tf
+  outputs:
+  - field_name: databricks_host
+    type: string
+    details: Databricks workspace URL.
+  - field_name: databricks_token
+    type: string
+    details: Binding-scoped Databricks PAT for querying the serving endpoint.
+  - field_name: endpoint_name
+    type: string
+    details: Databricks serving endpoint name.
+  - field_name: invocation_url
+    type: string
+    details: Databricks serving endpoint invocation URL.
+  - field_name: openai_base_url
+    type: string
+    details: OpenAI-compatible Databricks base URL for clients such as Codex.
+  - field_name: served_entity_name
+    type: string
+    details: Name of the served entity exposed through the endpoint.
+  - field_name: entity_name
+    type: string
+    details: Databricks model or foundation model identifier configured for the endpoint.
+  - field_name: entity_version
+    type: string
+    details: Model version configured for the endpoint.
+  - field_name: workload_size
+    type: string
+    details: Serving workload size.
+  - field_name: workload_type
+    type: string
+    details: Serving workload type.
+  - field_name: ttl_expires_at
+    type: string
+    details: RFC3339 timestamp when this instance expires.
+  - field_name: binding_provenance_json
+    type: string
+    details: JSON object of CF org, space, user, and app provenance for the binding.
+  - field_name: resource_tags_json
+    type: string
+    details: JSON object of effective Databricks tags derived from CF labels.
+  - field_name: normalized_binding_json
+    type: string
+    details: Normalized v1 runtime binding payload for cross-provider consumers.

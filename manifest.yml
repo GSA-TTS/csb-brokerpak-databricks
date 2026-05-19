@@ -24,3 +24,4 @@ env_config_mapping:
   DATABRICKS_TOKEN: databricks.token
 service_definitions:
 - databricks-workspace.yml
+- databricks-model-serving.yml
